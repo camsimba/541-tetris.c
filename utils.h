@@ -5,3 +5,7 @@ void moveBlock(int b1, int b2, int b3, int b4){
     b4 += 1;
     return;
 }
+
+bool game_initialize(){
+
+}
