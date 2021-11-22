@@ -18,6 +18,7 @@ struct Block {
 };
 
 int gameState[200] = {0};
+int score = 0;
 
 //updates the array that stores info on block locations
 int updateState(){
@@ -97,7 +98,7 @@ bool check_block(){
 
 void drawGame(){
     printf("%c", '\n');
-    printf("----------------------------------------");
+    printf("--------Score = '%d'-------------------------------", score);
     printf("%c", '\n');
     for(int i = 0; i < width*height; i++){
         if(i%width == 0){
@@ -365,6 +366,25 @@ bool rotateBlock(int block){
     return true;
 }
 
+void updateScore(){
+    for(int i = 0; i < height; i++){
+        int line = 0;
+        for(int j = 0; j < width; j++){
+            if(gameState[j+width*i] == 0){
+                break;
+            }
+            line++;
+        }
+        if(line == width){
+            for(int k = ((i+1)*width)-1; k >= width; k--){
+                gameState[k] = gameState[k-width];
+                gameState[k-width] = 0;
+            }
+            score+=width;
+        }
+    }
+}
+
 bool game_start(){
     int randBlock;
     int currBlock = 0;
@@ -380,12 +400,13 @@ bool game_start(){
             dir = 0;
         }else if(chr == 'd'){
             dir = 2;
-        }else if(chr == 'w'){
-            rotateBlock(randBlock);
+        // }else if(chr == 'w'){
+        //     rotateBlock(randBlock);
         }else{
             dir = 0;
         }
         if(currBlock == 0){
+            updateScore();
             randBlock = rand() % 7;
             if(!placeBlock(randBlock)){
                 printf("game over");
